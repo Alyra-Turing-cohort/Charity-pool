@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "yarn"
+    directories:
+      - "/"
+      - "/app"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "cargo"
+    directory: "/programs/charity-pool"
+    schedule:
+      interval: "daily"
