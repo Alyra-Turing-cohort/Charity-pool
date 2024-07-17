@@ -19,7 +19,7 @@ pub mod charity_pool {
         initialize::handler(ctx)
     }
 
-    pub fn create_pool(ctx: Context<CreatePool>) -> Result<()> {
-        create_pool::handler(ctx)
+    pub fn create_pool(ctx: Context<CreatePool>, params: CreatePoolParams) -> Result<()> {
+        create_pool::handler(ctx, params)
     }
 }
