@@ -5,6 +5,7 @@ pub struct Pool {
     pub title: String,
     pub description: String,
     pub deadline: u64,
+    pub contributors: Vec<Contributor>,
 }
 
 #[account]
