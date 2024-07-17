@@ -3,13 +3,13 @@ use anchor_lang::prelude::*;
 use crate::Pool;
 
 #[derive(Accounts)]
-#[instruction(params: CreatePoolParams)]
+// #[instruction(params: CreatePoolParams)]
 pub struct CreatePool<'info> {
     #[account(
         init,
         payer = creator,
         space = 8 + Pool::INIT_SPACE,
-        seeds = [b"pool".as_ref(), creator.key().as_ref(), &donation.key().as_ref()],
+        seeds = [b"pool".as_ref(), creator.key().as_ref(), donation.key().as_ref()],
         bump
 
     )]
@@ -30,17 +30,15 @@ pub struct CreatePool<'info> {
     pub system_program: Program<'info, System>,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct CreatePoolParams {
-    //pool_name: String,
-    //donation_pubkey: Pubkey,
-    initial_funding: u64,
-}
+// #[derive(Debug, AnchorSerialize, AnchorDeserialize)]
+// pub struct CreatePoolParams {
+//     pool_name: String,
+//     donation_pubkey: Pubkey,
+//     initial_funding: u64,
+// }
 
-pub fn handler(ctx: Context<CreatePool>, params: CreatePoolParams) -> Result<()> {
+pub fn handler(ctx: Context<CreatePool>, pool_name: String, donation_pubkey: Pubkey, initial_funding: u64) -> Result<()> {
     let creator = ctx.accounts.creator.key();
-    let pool_name = "Pool".to_string();
-    let donation_pubkey = Pubkey::default();
     *ctx.accounts.pool = Pool::new(pool_name, donation_pubkey, creator)?;
 
     msg!("Pool created: {:?}", ctx.accounts.pool);
