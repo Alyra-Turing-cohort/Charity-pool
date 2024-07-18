@@ -5,7 +5,7 @@ use crate::state::Contribution;
 #[derive(Accounts)]
 pub struct Contribute<'info> {
     #[account(mut,
-        seeds = [b"pool", creator.key().as_ref(), donation.key().as_ref()],
+        seeds = [b"pool", pool.creator.key().as_ref(), donation.key().as_ref()],
         bump
     )]
     pub pool: Account<'info, Pool>,
@@ -14,9 +14,6 @@ pub struct Contribute<'info> {
     pub contributor: Signer<'info>,
 
     pub donation: SystemAccount<'info>,
-
-    #[account(mut)]
-    pub creator: SystemAccount<'info>,
 
     pub system_program: Program<'info, System>,
 }

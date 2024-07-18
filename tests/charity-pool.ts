@@ -1,13 +1,13 @@
 import * as anchor from "@coral-xyz/anchor";
-import {Program} from "@coral-xyz/anchor";
-import {CharityPool} from "../target/types/charity_pool";
+import { Program } from "@coral-xyz/anchor";
+import { CharityPool } from "../target/types/charity_pool";
 import {
     LAMPORTS_PER_SOL,
     PublicKey,
     SystemProgram,
     Keypair
 } from "@solana/web3.js";
-import {assert} from "chai";
+import { assert } from "chai";
 
 describe("charity-pool", () => {
     // Configure the client to use the local cluster.
