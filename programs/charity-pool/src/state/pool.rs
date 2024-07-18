@@ -10,6 +10,7 @@ pub struct Pool {
     pub deadline: u64,
     #[max_len(64)]
     pub contributions: Vec<Contribution>,
+    pub winner: Option<Pubkey>,
 }
 
 impl Pool {
@@ -25,7 +26,18 @@ impl Pool {
             creator,
             deadline: (current_timestamp as u64).checked_add(duration).unwrap(),
             contributions: Vec::new(),
+            winner: None,
         })
+    }
+
+    pub fn draw_winner(&mut self) -> Result<()> {
+        // self.winner = simulate_vrf(pool.contributions.len());
+        self.winner = Some(self.contributions[0].contributor);
+        Ok(())
+    }
+
+    pub fn is_ended(&self, current_timestamp: u64) -> bool {
+        self.deadline <= current_timestamp
     }
 }
 

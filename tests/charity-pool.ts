@@ -31,7 +31,7 @@ describe("charity-pool", () => {
     );
 
     const [poolVaultPda, poolVaultBump] = PublicKey.findProgramAddressSync(
-        [Buffer.from("pool_vault"), poolCreator.publicKey.toBuffer(), poolPda.toBuffer()],
+        [Buffer.from("pool_vault"), poolPda.toBuffer()],
         program.programId
     );
 
@@ -137,11 +137,22 @@ describe("charity-pool", () => {
         console.log("Contribution recorded in pool: ", poolAccount.contributions);
     });
 
+
     it("Distributes funds", async () => {
+        // Draw winner
+        await program.methods.drawWinner()
+            .accounts({
+                pool: poolPda,
+                creator: poolCreator.publicKey,
+                systemProgram: SystemProgram.programId,
+            })
+            .signers([poolCreator])
+            .rpc();
 
         const poolAccount = await program.account.pool.fetch(poolPda);
         const contributions = poolAccount.contributions;
 
+        assert.isNotNull(poolAccount.winner, "Winner should be drawn");
         assert.ok(contributions.length > 0, "Contributions should be recorded");
 
         const contribution = contributions.find(
@@ -154,8 +165,9 @@ describe("charity-pool", () => {
         await program.methods.distributeFunds()
             .accounts({
                 pool: poolPda,
-                creator: poolCreator.publicKey,
                 poolVault: poolVaultPda,
+                providedWinner: poolAccount.winner,
+                creator: poolCreator.publicKey,
                 donation: donationKeypair.publicKey,
                 systemProgram: SystemProgram.programId,
             })

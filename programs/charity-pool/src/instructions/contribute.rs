@@ -10,6 +10,14 @@ pub struct Contribute<'info> {
     )]
     pub pool: Account<'info, Pool>,
 
+    /// CHECK: This is not dangerous because the pool_vault is owned by the program
+    #[account(
+        mut,
+        seeds = [b"pool_vault".as_ref(), pool.key().as_ref()],
+        bump
+    )]
+    pub pool_vault: SystemAccount<'info>,
+
     #[account(mut)]
     pub contributor: Signer<'info>,
 
@@ -19,10 +27,13 @@ pub struct Contribute<'info> {
 }
 
 pub fn handler(ctx: Context<Contribute>, amount: u64) -> Result<()> {
+    let system_program = &ctx.accounts.system_program;
+    let contributor = &mut ctx.accounts.contributor;
     let pool = &mut ctx.accounts.pool;
+    let pool_vault = &mut ctx.accounts.pool_vault;
 
     let contribution = Contribution {
-        contributor: ctx.accounts.contributor.key(),
+        contributor: contributor.key(),
         amount,
     };
 
@@ -32,25 +43,23 @@ pub fn handler(ctx: Context<Contribute>, amount: u64) -> Result<()> {
     let space_needed = 8 + (8 * pool.contributions.capacity());
 
     // Check the account size and reallocate if necessary
-    if ctx.accounts.pool.to_account_info().data_len() < space_needed {
-        ctx.accounts.pool.to_account_info().realloc(space_needed, false)?;
+    if pool.to_account_info().data_len() < space_needed {
+        pool.to_account_info().realloc(space_needed, false)?;
     }
-
-    let pool_account = ctx.accounts.pool.to_account_info();
 
     // Transfer contribution amount from the contributor to the pool's account
     let ix = anchor_lang::solana_program::system_instruction::transfer(
-        &ctx.accounts.contributor.key(),
-        &pool_account.key(),
+        &contributor.key(),
+        &pool_vault.key(),
         amount,
     );
 
     anchor_lang::solana_program::program::invoke(
         &ix,
         &[
-            ctx.accounts.contributor.to_account_info(),
-            pool_account,
-            ctx.accounts.system_program.to_account_info(),
+            contributor.to_account_info(),
+            pool_vault.to_account_info(),
+            system_program.to_account_info(),
         ],
     )?;
 

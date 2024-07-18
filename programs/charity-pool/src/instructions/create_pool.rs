@@ -15,12 +15,13 @@ pub struct CreatePool<'info> {
     )]
     pub pool: Account<'info, Pool>,
 
-    // #[account(
-    //     mut,
-    //     seeds = [b"pool_vault".as_ref(), creator.key().as_ref(), &params.donation_pubkey.to_bytes()],
-    //     bump,
-    // )]
-    // pub pool_vault: SystemAccount<'info>,
+    /// CHECK: This is not dangerous because the pool_vault is owned by the program
+    #[account(
+        mut,
+        seeds = [b"pool_vault".as_ref(), pool.key().as_ref()],
+        bump,
+    )]
+    pub pool_vault: SystemAccount<'info>,
 
     pub donation: SystemAccount<'info>,
 

@@ -1,93 +1,111 @@
 use anchor_lang::prelude::*;
+use anchor_lang::system_program;
+
 use crate::state::Pool;
-use anchor_lang::solana_program::program::invoke;
-use anchor_lang::solana_program::system_instruction::transfer;
+use crate::error::DistributeFundsError;
 
 #[derive(Accounts)]
 pub struct DistributeFunds<'info> {
-    #[account(mut, has_one = creator)]
+    #[account(
+        mut,
+        seeds = [b"pool".as_ref(), creator.key().as_ref(), donation.key().as_ref()],
+        bump
+
+    )]
     pub pool: Account<'info, Pool>,
 
     #[account(mut)]
     pub creator: Signer<'info>,
 
-    /// CHECK: This is not dangerous because we don't read or write from this account
+    /// CHECK: This is not dangerous because the pool_vault is owned by the program
     #[account(
         mut,
-        seeds = [b"pool_vault".as_ref(), creator.key().as_ref(), pool.key().as_ref()],
+        seeds = [b"pool_vault".as_ref(), pool.key().as_ref()],
         bump
     )]
-    pub pool_vault: AccountInfo<'info>,
+    pub pool_vault: SystemAccount<'info>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = donation.key() == pool.donation_pubkey @ DistributeFundsError::DonationAccountMismatch
+    )]
     pub donation: SystemAccount<'info>,
+
+    #[account(
+        mut,
+    )]
+    pub provided_winner: SystemAccount<'info>,
 
     pub system_program: Program<'info, System>,
 }
 
 pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
-    let pool_vault_balance = **ctx.accounts.pool_vault.lamports.borrow();
+    let pool_vault = &mut ctx.accounts.pool_vault;
+    let donation = &mut ctx.accounts.donation;
     let pool = &mut ctx.accounts.pool;
+    let provided_winner = &mut ctx.accounts.provided_winner;
+    let creator = &mut ctx.accounts.creator;
 
-    let total_pool_amount = pool.contributions.iter().map(|c| c.amount).sum::<u64>();
-    if total_pool_amount == 0 {
-        return Err(ErrorCode::NoContributions.into());
+    require_gt!(pool.contributions.len(), 0, DistributeFundsError::NoContributions);
+
+    match pool.winner {
+        Some(drawn_winner) => {
+            require_eq!(drawn_winner, provided_winner.key(), DistributeFundsError::WinnerMismatch);
+        },
+        None => {
+            return Err(DistributeFundsError::WinnerNotDrawn.into());
+        }
     }
-    if pool_vault_balance < total_pool_amount {
-        return Err(ErrorCode::InsufficientFunds.into());
-    }
 
-    // let winner_index = simulate_vrf(pool.contributions.len());
-    let winner = &pool.contributions[0];
+    let pool_vault_balance = pool_vault.lamports();
 
-    //POurcentage
-    let winner_amount = total_pool_amount * 70 / 100;
-    let charity_amount = total_pool_amount * 20 / 100;
-    let protocol_amount = total_pool_amount * 10 / 100;
+    // Pourcentage
+    let winner_amount = pool_vault_balance.checked_mul(70).unwrap().checked_div(100).unwrap();
+    let charity_amount = pool_vault_balance.checked_mul(20).unwrap().checked_div(100).unwrap();
+    let protocol_amount = pool_vault_balance.checked_mul(10).unwrap().checked_div(100).unwrap();
 
-
-    assert!(**ctx.accounts.pool_vault.try_borrow_mut_lamports()? >= winner_amount + charity_amount + protocol_amount);
+    assert!(pool_vault.lamports() >= winner_amount + charity_amount + protocol_amount, "Round error");
 
     // Transfer to winner
-    let winner_transfer_ix = transfer(
-        &ctx.accounts.pool_vault.key(),
-        &winner.contributor,
-        winner_amount
-    );
-    invoke(
-        &winner_transfer_ix,
-        &[
-            ctx.accounts.pool_vault.to_account_info(),
+    let bump = &[ctx.bumps.pool_vault][..];
+    let seeds = vec![b"pool_vault".as_ref(), pool.to_account_info().key.as_ref(), bump];
+    let seeds = &[&seeds[..]];
+    system_program::transfer(
+        CpiContext::new_with_signer(
             ctx.accounts.system_program.to_account_info(),
-        ]
+            system_program::Transfer {
+                from: pool_vault.to_account_info(),
+                to: provided_winner.to_account_info(),
+            },
+            seeds,
+        ),
+        winner_amount,
     )?;
 
     // Transfer to charity
-    let charity_transfer_ix = transfer(
-        &ctx.accounts.pool_vault.key(),
-        &ctx.accounts.donation.key(),
-        charity_amount
-    );
-    invoke(
-        &charity_transfer_ix,
-        &[
-            ctx.accounts.pool_vault.to_account_info(),
+    system_program::transfer(
+        CpiContext::new_with_signer(
             ctx.accounts.system_program.to_account_info(),
-        ]
+            system_program::Transfer {
+                from: pool_vault.to_account_info(),
+                to: donation.to_account_info(),
+            },
+            seeds,
+        ),
+        charity_amount
     )?;
 
     // Transfer to protocol
-    let protocol_transfer_ix = transfer(
-        &ctx.accounts.pool_vault.key(),
-         &ctx.accounts.creator.key(),
-        protocol_amount
-    );
-    invoke(
-        &protocol_transfer_ix,
-        &[
-            ctx.accounts.pool_vault.to_account_info(),
+    system_program::transfer(
+        CpiContext::new_with_signer(
             ctx.accounts.system_program.to_account_info(),
-        ]
+            system_program::Transfer {
+                from: pool_vault.to_account_info(),
+                to: creator.to_account_info(),
+            },
+            seeds,
+        ),
+        protocol_amount
     )?;
 
 
@@ -101,15 +119,3 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
     Ok(())
 }
 
-// A remplacer
-fn simulate_vrf(total_contributors: usize) -> usize {
-    (total_contributors * 12345 + 6789) % total_contributors
-}
-
-#[error_code]
-pub enum ErrorCode {
-    #[msg("No contributions available for distribution")]
-    NoContributions,
-    #[msg("Insufficient funds in the pool vault")]
-    InsufficientFunds,
-}
