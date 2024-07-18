@@ -71,9 +71,8 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
     assert!(pool_vault.lamports() >= winner_amount + charity_amount + protocol_amount, "Round error");
 
     // Transfer to winner
-    let bump = &[ctx.bumps.pool_vault][..];
-    let seeds = vec![b"pool_vault".as_ref(), pool.to_account_info().key.as_ref(), bump];
-    let seeds = &[&seeds[..]];
+    let bump = &[ctx.bumps.pool_vault];
+    let seeds = &[&[b"pool_vault".as_ref(), pool.to_account_info().key.as_ref(), bump][..]];
     system_program::transfer(
         CpiContext::new_with_signer(
             ctx.accounts.system_program.to_account_info(),
