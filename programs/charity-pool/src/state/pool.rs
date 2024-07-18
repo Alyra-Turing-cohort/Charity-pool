@@ -15,8 +15,6 @@ pub struct Pool {
 }
 
 impl Pool {
-    pub const INIT_SPACE: usize = 8 + 4 + (32 * 2) + 8 + (8 + 64 * (32 + 8)); // adjust the space calculation if necessary
-
     pub fn new(name: String, donation_pubkey: Pubkey, creator: Pubkey) -> Result<Self> {
         let current_timestamp = Clock::get()?.unix_timestamp;
         let duration = 5 * 60;
