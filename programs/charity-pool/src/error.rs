@@ -2,6 +2,9 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum DistributeFundsError {
+    #[msg("Pool already claimed")]
+    PoolAlreadyClaimed,
+
     #[msg("No contributions available for distribution")]
     NoContributions,
 
@@ -13,6 +16,9 @@ pub enum DistributeFundsError {
 
     #[msg("Provided winner does not match the drawn winner")]
     WinnerMismatch,
+
+    #[msg("Creator does not match the pool creator")]
+    CreatorMismatch,
 }
 
 #[error_code]
@@ -23,4 +29,3 @@ pub enum DrawWinnerError {
     #[msg("Pool not ended yet")]
     PoolNotEnded,
 }
-

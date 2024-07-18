@@ -9,13 +9,11 @@ pub struct DistributeFunds<'info> {
     #[account(
         mut,
         seeds = [b"pool".as_ref(), creator.key().as_ref(), donation.key().as_ref()],
+        constraint = !pool.claimed  @ DistributeFundsError::PoolAlreadyClaimed,
         bump
 
     )]
     pub pool: Account<'info, Pool>,
-
-    #[account(mut)]
-    pub creator: Signer<'info>,
 
     /// CHECK: This is not dangerous because the pool_vault is owned by the program
     #[account(
@@ -34,7 +32,13 @@ pub struct DistributeFunds<'info> {
     #[account(
         mut,
     )]
-    pub provided_winner: SystemAccount<'info>,
+    pub provided_winner: Signer<'info>,
+
+    #[account(
+        mut,
+        constraint = creator.key() == pool.creator @ DistributeFundsError::CreatorMismatch
+    )]
+    pub creator: SystemAccount<'info>,
 
     pub system_program: Program<'info, System>,
 }
@@ -108,6 +112,7 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
         protocol_amount
     )?;
 
+    pool.claimed = true;
 
     msg!(
         "Funds distributed: Winner: {}, Charity: {}, Protocol: {}",

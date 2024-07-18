@@ -11,6 +11,7 @@ pub struct Pool {
     #[max_len(64)]
     pub contributions: Vec<Contribution>,
     pub winner: Option<Pubkey>,
+    pub claimed: bool,
 }
 
 impl Pool {
@@ -27,6 +28,7 @@ impl Pool {
             deadline: (current_timestamp as u64).checked_add(duration).unwrap(),
             contributions: Vec::new(),
             winner: None,
+            claimed: false,
         })
     }
 
