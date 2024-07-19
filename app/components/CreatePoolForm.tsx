@@ -9,8 +9,9 @@ import Typography from "@mui/material/Typography";
 import Slider from "@mui/material/Slider";
 import { Wallet } from "@mui/icons-material";
 import { useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { createPool } from "./helpers/PoolHelper";
 
 const style = {
   position: "absolute" as "absolute",
@@ -34,23 +35,26 @@ export default function CreatePoolForm() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [donation, setDonation] = useState("");
+  const [title, setTitle] = useState("");
   const [sliderDefaultValue, setSliderDefaultValue] = useState(1);
 
   const wallet = useWallet();
+  const connection = useConnection();
 
-  const createPool = () => {
+  const submitCreatePool = () => {
     console.log(sliderDefaultValue + ' SOL @ ' + donation);
+    createPool(title, sliderDefaultValue, connection.connection, wallet);
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleDonationChange = (event: SelectChangeEvent) => {
     setDonation(event.target.value as string);
   };
 
   const handleTitleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value as string);
+    setTitle(event.target.value as string);
   };
 
-  const valueLabelFormat = (value: number) => {
+  const valueLabelFormat = (value: number): string => {
     setSliderDefaultValue(value);
     return `${value} SOL`;
   };
@@ -81,7 +85,7 @@ export default function CreatePoolForm() {
             </Typography>
 
 
-            <TextField id="standard-basic" label="Pool title" variant="standard" onChange={handleTitleChange}/>
+            <TextField id="standard-basic" label="The pool's title" variant="standard" onChange={handleTitleChange}/>
 
             <InputLabel id="demo-simple-select-label">Donation</InputLabel>
             <Select
@@ -89,7 +93,7 @@ export default function CreatePoolForm() {
               id="demo-simple-select"
               value={donation}
               label="Donation"
-              onChange={handleChange}
+              onChange={handleDonationChange}
             >
               <MenuItem value={solanaLabs}>{solanaLabs}</MenuItem>
               <MenuItem value={alyraAlumni}>{alyraAlumni}</MenuItem>
@@ -115,7 +119,7 @@ export default function CreatePoolForm() {
                   variant="outlined"
                   color="secondary"
                   endIcon={<Wallet />}
-                  onClick={createPool}
+                  onClick={submitCreatePool}
                 >
                   Create new pool
                 </Button>
