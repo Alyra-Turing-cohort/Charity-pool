@@ -101,6 +101,8 @@ describe("charity-pool", () => {
         assert.equal(poolAccount.donationPubkey.toBase58(), donationKeypair.publicKey.toBase58(), "Donation pubkey should match");
         console.log("Pool account: ", poolAccount);
 
+        const contributions = poolAccount.contributions;
+        assert.ok(contributions.length > 0, "Initial contrib should be recorded");
     });
 
     it("Contributes to the Pool", async () => {

@@ -16,16 +16,18 @@ pub struct Pool {
 impl Pool {
     pub const INIT_SPACE: usize = 8 + 4 + (32 * 2) + 8 + (8 + 64 * (32 + 8)); // adjust the space calculation if necessary
 
-    pub fn new(name: String, donation_pubkey: Pubkey, creator: Pubkey) -> Result<Self> {
+    pub fn new(name: String, donation_pubkey: Pubkey, creator: Pubkey, initial_funding: u64) -> Result<Self> {
         let current_timestamp = Clock::get()?.unix_timestamp;
         let duration = 5 * 60;
+        let initial_contrib = Contribution { contributor: creator, amount: initial_funding };
 
         Ok(Pool {
             name,
             donation_pubkey,
             creator,
             deadline: (current_timestamp as u64).checked_add(duration).unwrap(),
-            contributions: Vec::new(),
+            contributions: vec![initial_contrib; 1],
+
             winner: None,
         })
     }

@@ -40,7 +40,7 @@ pub struct CreatePool<'info> {
 
 pub fn handler(ctx: Context<CreatePool>, pool_name: String, donation_pubkey: Pubkey, initial_funding: u64) -> Result<()> {
     let creator = ctx.accounts.creator.key();
-    *ctx.accounts.pool = Pool::new(pool_name, donation_pubkey, creator)?;
+    *ctx.accounts.pool = Pool::new(pool_name, donation_pubkey, creator, initial_funding)?;
 
     msg!("Pool created: {:?}", ctx.accounts.pool);
 
