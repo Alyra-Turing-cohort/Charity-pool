@@ -5,15 +5,12 @@ import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 export const createPool = async (title: string,
     initialFunding: number,
     connection: anchor.web3.Connection,
-    wallet) => {
+    wallet): string => {
 
     // get the program
     const program = getProgramById(connection, wallet);
 
     const donationKeypair = Keypair.generate();
-
-    console.log("program id", program.programId.toBase58());
-    console.log("system program id", SystemProgram.programId.toBase58());
 
     // get the PDA address
     const [poolPda, bump] = PublicKey.findProgramAddressSync(
@@ -34,5 +31,12 @@ export const createPool = async (title: string,
         })
         .rpc();
 
-    console.log('tx', tx);
+    return tx;
+}
+
+export const getPools = async (connection: anchor.web3.Connection, wallet) => {
+    // get the program
+    const program = getProgramById(connection, wallet);
+    const poolList = await program.account.pool.all();
+    return poolList;
 }

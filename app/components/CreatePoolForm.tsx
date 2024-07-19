@@ -9,9 +9,18 @@ import Typography from "@mui/material/Typography";
 import Slider from "@mui/material/Slider";
 import { Wallet } from "@mui/icons-material";
 import { useState } from "react";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import {
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from "@mui/material";
 import { createPool } from "./helpers/PoolHelper";
+import { toast } from "sonner";
+import Link from "next/link";
 
 const style = {
   position: "absolute" as "absolute",
@@ -41,9 +50,28 @@ export default function CreatePoolForm() {
   const wallet = useWallet();
   const connection = useConnection();
 
-  const submitCreatePool = () => {
-    console.log(sliderDefaultValue + ' SOL @ ' + donation);
-    createPool(title, sliderDefaultValue, connection.connection, wallet);
+  const submitCreatePool = async () => {
+    await createPool(
+      title,
+      sliderDefaultValue,
+      connection.connection,
+      wallet
+    ).then((tx) => {
+      const urlSolanaEplorer =
+        "https://explorer.solana.com/tx/" + tx + "?cluster=devnet";
+  
+      const txMessage = (
+        <Link href={urlSolanaEplorer} target="_blank">
+          Check this out on Solana explorer <OpenInNewIcon />
+        </Link>
+      );
+      
+      toast(txMessage);
+    }).catch(err => {
+      toast("Transaction cancelled");
+      console.error(err);
+    });
+    setOpen(!open);
   };
 
   const handleDonationChange = (event: SelectChangeEvent) => {
@@ -84,8 +112,12 @@ export default function CreatePoolForm() {
               You rock 👋
             </Typography>
 
-
-            <TextField id="standard-basic" label="The pool's title" variant="standard" onChange={handleTitleChange}/>
+            <TextField
+              id="standard-basic"
+              label="The pool's title"
+              variant="standard"
+              onChange={handleTitleChange}
+            />
 
             <InputLabel id="demo-simple-select-label">Donation</InputLabel>
             <Select
