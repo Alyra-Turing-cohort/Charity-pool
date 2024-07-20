@@ -78,6 +78,7 @@ export default function CreatePoolForm({ setPoolsLoaded }) {
 
   const handleTitleChange = (event: SelectChangeEvent) => {
     setTitle(event.target.value as string);
+    console.log(title);
   };
 
   const valueLabelFormat = (value: number): string => {
@@ -114,22 +115,22 @@ export default function CreatePoolForm({ setPoolsLoaded }) {
                   id="transition-modal-description"
                   sx={{ mt: 2, mb: 2 }}
                 >
-                  You rock 👋
+                  Set up the pool
                 </Typography>
 
                 <TextField
-                  id="standard-basic"
+                  id="outlined-basic"
                   label="The pool's title"
-                  variant="standard"
+                  variant="outlined"
                   onChange={handleTitleChange}
                 />
 
-                <InputLabel id="demo-simple-select-label">Donation</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select the donation</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={donation}
-                  label="Donation"
+                  label="Select the donation"
                   onChange={handleDonationChange}
                 >
                   <MenuItem value={solanaLabs}>{solanaLabs}</MenuItem>
