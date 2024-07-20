@@ -1,6 +1,6 @@
 import { getProgramById } from "./ProgramHelper";
 import * as anchor from "@coral-xyz/anchor";
-import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from "@solana/web3.js";
 
 export const createPool = async (title: string,
     initialFunding: number,
@@ -53,15 +53,22 @@ export const contributeToPool = async (connection: anchor.web3.Connection, walle
         program.programId
     );
 
+    // get the vault PDA address
+    const [poolVaultPda, poolVaultBump] = PublicKey.findProgramAddressSync(
+        [Buffer.from("pool_vault"), poolPda.toBuffer()],
+        program.programId
+    );
+
     console.log('poolPda', poolPda.toBase58());
 
     const tx = await program.methods
-    .contribute(new anchor.BN(contributionAmount))
+    .contribute(new anchor.BN(contributionAmount * LAMPORTS_PER_SOL))
     .accounts({
         pool: poolPda,
         creator: pool.creator,
         contributor: wallet.publicKey,
         donation: pool.donationPubkey,
+        poolVault: poolVaultPda,
         systemProgram: SystemProgram.programId,
     })
     .rpc();
