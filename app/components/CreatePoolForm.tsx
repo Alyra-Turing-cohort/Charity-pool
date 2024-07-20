@@ -39,7 +39,7 @@ const solanaLabs = "Solana labs";
 const alyraAlumni = "Alyra alumni";
 const antiCapitalism = "Anti capitalism";
 
-export default function CreatePoolForm() {
+export default function CreatePoolForm({setPoolsLoaded}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -65,7 +65,7 @@ export default function CreatePoolForm() {
           Check this out on Solana explorer <OpenInNewIcon />
         </Link>
       );
-      
+      setPoolsLoaded(false);
       toast(txMessage);
     }).catch(err => {
       toast("Transaction cancelled");
