@@ -21,6 +21,7 @@ import {
 import { createPool } from "./helpers/PoolHelper";
 import { toast } from "sonner";
 import Link from "next/link";
+import MyMultiButton from "./layout/MyMultiButton";
 
 const style = {
   position: "absolute" as "absolute",
@@ -39,7 +40,7 @@ const solanaLabs = "Solana labs";
 const alyraAlumni = "Alyra alumni";
 const antiCapitalism = "Anti capitalism";
 
-export default function CreatePoolForm({setPoolsLoaded}) {
+export default function CreatePoolForm({ setPoolsLoaded }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -51,26 +52,23 @@ export default function CreatePoolForm({setPoolsLoaded}) {
   const connection = useConnection();
 
   const submitCreatePool = async () => {
-    await createPool(
-      title,
-      sliderDefaultValue,
-      connection.connection,
-      wallet
-    ).then((tx) => {
-      const urlSolanaEplorer =
-        "https://explorer.solana.com/tx/" + tx + "?cluster=devnet";
-  
-      const txMessage = (
-        <Link href={urlSolanaEplorer} target="_blank">
-          Check this out on Solana explorer <OpenInNewIcon />
-        </Link>
-      );
-      setPoolsLoaded(false);
-      toast(txMessage);
-    }).catch(err => {
-      toast("Transaction cancelled");
-      console.error(err);
-    });
+    await createPool(title, sliderDefaultValue, connection.connection, wallet)
+      .then((tx) => {
+        const urlSolanaEplorer =
+          "https://explorer.solana.com/tx/" + tx + "?cluster=devnet";
+
+        const txMessage = (
+          <Link href={urlSolanaEplorer} target="_blank">
+            Check this out on Solana explorer <OpenInNewIcon />
+          </Link>
+        );
+        setPoolsLoaded(false);
+        toast(txMessage);
+      })
+      .catch((err) => {
+        toast("Transaction cancelled");
+        console.error(err);
+      });
     setOpen(!open);
   };
 
@@ -108,56 +106,83 @@ export default function CreatePoolForm({setPoolsLoaded}) {
             <Typography id="transition-modal-title" variant="h6" component="h2">
               Hey contributor!
             </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2, mb: 2 }}>
-              You rock 👋
-            </Typography>
 
-            <TextField
-              id="standard-basic"
-              label="The pool's title"
-              variant="standard"
-              onChange={handleTitleChange}
-            />
-
-            <InputLabel id="demo-simple-select-label">Donation</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={donation}
-              label="Donation"
-              onChange={handleDonationChange}
-            >
-              <MenuItem value={solanaLabs}>{solanaLabs}</MenuItem>
-              <MenuItem value={alyraAlumni}>{alyraAlumni}</MenuItem>
-              <MenuItem value={antiCapitalism}>{antiCapitalism}</MenuItem>
-            </Select>
-
-            <Box sx={{ width: 300 }}>
-              <Slider
-                aria-label="Temperature"
-                defaultValue={sliderDefaultValue}
-                getAriaValueText={valueLabelFormat}
-                valueLabelDisplay="auto"
-                step={0.5}
-                marks
-                min={0.5}
-                max={20}
-              />
-            </Box>
-
-            <Box>
+            {/* start control here */}
+            {wallet.connected ? (
               <>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  endIcon={<Wallet />}
-                  onClick={submitCreatePool}
+                <Typography
+                  id="transition-modal-description"
+                  sx={{ mt: 2, mb: 2 }}
                 >
-                  Create new pool
-                </Button>
-                <span>SOL {sliderDefaultValue} </span>
+                  You rock 👋
+                </Typography>
+
+                <TextField
+                  id="standard-basic"
+                  label="The pool's title"
+                  variant="standard"
+                  onChange={handleTitleChange}
+                />
+
+                <InputLabel id="demo-simple-select-label">Donation</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={donation}
+                  label="Donation"
+                  onChange={handleDonationChange}
+                >
+                  <MenuItem value={solanaLabs}>{solanaLabs}</MenuItem>
+                  <MenuItem value={alyraAlumni}>{alyraAlumni}</MenuItem>
+                  <MenuItem value={antiCapitalism}>{antiCapitalism}</MenuItem>
+                </Select>
+
+                <Box sx={{ width: 300 }}>
+                  <Slider
+                    aria-label="Temperature"
+                    defaultValue={sliderDefaultValue}
+                    getAriaValueText={valueLabelFormat}
+                    valueLabelDisplay="auto"
+                    step={0.5}
+                    marks
+                    min={0.5}
+                    max={20}
+                  />
+                </Box>
+
+                <Box>
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      endIcon={<Wallet />}
+                      onClick={submitCreatePool}
+                    >
+                      Create new pool
+                    </Button>
+                    <span>SOL {sliderDefaultValue} </span>
+                  </>
+                </Box>
               </>
-            </Box>
+            ) : (
+              <div>
+                <Typography
+                  id="transition-modal-description"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  Wanna contribute? 👋
+                </Typography>
+                <Typography
+                  id="transition-modal-description"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  Please connect
+                </Typography>
+                <MyMultiButton />
+              </div>
+            )}
+
+            {/* end control here */}
           </Box>
         </Fade>
       </Modal>
