@@ -10,6 +10,7 @@ import Slider from "@mui/material/Slider";
 import { Wallet } from "@mui/icons-material";
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import MyMultiButton from "./layout/MyMultiButton";
 
 const style = {
   position: "absolute" as "absolute",
@@ -23,7 +24,6 @@ const style = {
   borderRadius: 5,
   p: 4,
 };
-
 
 export default function TransitionsModal() {
   const [sliderDefaultValue, setSliderDefaultValue] = useState(1);
@@ -62,25 +62,28 @@ export default function TransitionsModal() {
             <Typography id="transition-modal-title" variant="h6" component="h2">
               Hey contributor 👋
             </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2, mb: 2 }}>
-              We encourage you to contribute to this pool by helping them.
-            </Typography>
 
-            <Box sx={{ width: 300 }}>
-              <Slider
-                aria-label="Temperature"
-                defaultValue={sliderDefaultValue}
-                getAriaValueText={valueLabelFormat}
-                valueLabelDisplay="auto"
-                step={0.5}
-                marks
-                min={0.5}
-                max={20}
-              />
-            </Box>
-
-            {wallet.connected && (
+            {wallet.connected ? (
               <>
+                <Typography
+                  id="transition-modal-description"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  We encourage you to contribute to this pool.
+                </Typography>
+
+                <Box sx={{ width: 300 }}>
+                  <Slider
+                    aria-label="Sol"
+                    defaultValue={sliderDefaultValue}
+                    getAriaValueText={valueLabelFormat}
+                    valueLabelDisplay="auto"
+                    step={0.5}
+                    marks
+                    min={0.5}
+                    max={20}
+                  />
+                </Box>
                 <Button
                   variant="outlined"
                   color="secondary"
@@ -91,6 +94,16 @@ export default function TransitionsModal() {
                 </Button>
                 <span>SOL {sliderDefaultValue} </span>
               </>
+            ) : (
+              <div>
+                <Typography
+                  id="transition-modal-description"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  Please, connect first.
+                </Typography>
+                <MyMultiButton />
+              </div>
             )}
           </Box>
         </Fade>

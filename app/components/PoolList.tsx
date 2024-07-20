@@ -55,7 +55,7 @@ export default function PoolList() {
                 min={0.5}
                 max={20}
                 disabled
-              />{" "}
+              />
               {pool.totalFunding} SOL / 20
               <div className="flex flex-col md:flex-row justify-start  items-center py-4">
                 <Contribute />
