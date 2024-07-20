@@ -12,7 +12,7 @@ export const createPool = async (title: string,
 
     const donationKeypair = Keypair.generate();
 
-    // get the PDA address
+    // get the pool PDA address
     const [poolPda, bump] = PublicKey.findProgramAddressSync(
         [Buffer.from("pool"),
         wallet.publicKey.toBuffer(),
@@ -39,4 +39,32 @@ export const getPools = async (connection: anchor.web3.Connection, wallet) => {
     const program = getProgramById(connection, wallet);
     const poolList = await program.account.pool.all();
     return poolList;
+}
+
+export const contributeToPool = async (connection: anchor.web3.Connection, wallet, pool, contributionAmount: number) => {
+    // get the program
+    const program = getProgramById(connection, wallet);
+    
+    // get the pool PDA address
+    const [poolPda, bump] = PublicKey.findProgramAddressSync(
+        [Buffer.from("pool"),
+        pool.creator.toBuffer(),
+        pool.donationPubkey.toBuffer()],
+        program.programId
+    );
+
+    console.log('poolPda', poolPda.toBase58());
+
+    const tx = await program.methods
+    .contribute(new anchor.BN(contributionAmount))
+    .accounts({
+        pool: poolPda,
+        creator: pool.creator,
+        contributor: wallet.publicKey,
+        donation: pool.donationPubkey,
+        systemProgram: SystemProgram.programId,
+    })
+    .rpc();
+
+    return tx;
 }

@@ -58,7 +58,7 @@ export default function PoolList() {
               />
               {pool.totalFunding} SOL / 20
               <div className="flex flex-col md:flex-row justify-start  items-center py-4">
-                <Contribute />
+                <Contribute pool={pool} setPoolsLoaded={setPoolsLoaded} />
               </div>
             </div>
           ))}
