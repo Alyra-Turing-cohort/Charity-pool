@@ -40,7 +40,7 @@ export default function PrimarySearchAppBar() {
                 Pools
               </Link>
               <Link
-                href="/basic"
+                href="/claim"
                 className="text-[#000000] dark:text-white text-[18px] font-bold navLink"
               >
                 Claims
