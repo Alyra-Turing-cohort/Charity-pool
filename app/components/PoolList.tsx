@@ -8,6 +8,7 @@ import Contribute from "./Contribute";
 import { Slider } from "@mui/material";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import Reward from "./Reward";
+import styles from "../styles/PoolList.module.css";
 
 export default function PoolList() {
   const [pools, setPools] = useState();
@@ -27,9 +28,12 @@ export default function PoolList() {
   }, [poolsLoaded]);
 
   return (
+    <>
+    <div className={styles.createPoolForm}>
+      <CreatePoolForm setPoolsLoaded={setPoolsLoaded} />
+      </div>
     <div className="w-full h-screen flex justify-center items-center ">
       <div className="max-w-md bg-transparent  text-black dark:text-white rounded-lg shadow-lg border border-0.5 border-gray-300 dark:border-gray-800 p-[1.25rem]">
-        <CreatePoolForm setPoolsLoaded={setPoolsLoaded} />
 
         {pools &&
           poolsLoaded &&
@@ -59,5 +63,6 @@ export default function PoolList() {
           ))}
       </div>
     </div>
+    </>
   );
 }
