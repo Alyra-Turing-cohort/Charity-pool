@@ -27,7 +27,7 @@ pub mod charity_pool {
         distribute_funds::handler(ctx)
     }
 
-     pub fn contribute(ctx: Context<Contribute>, amount: u64) -> Result<()> {
+    pub fn contribute(ctx: Context<Contribute>, amount: u64) -> Result<()> {
         contribute::handler(ctx, amount)
     }
     pub fn draw_winner(ctx: Context<DrawWinner>) -> Result<()> {

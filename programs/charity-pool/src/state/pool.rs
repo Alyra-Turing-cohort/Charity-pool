@@ -12,6 +12,7 @@ pub struct Pool {
     pub contributions: Vec<Contribution>,
     pub winner: Option<Pubkey>,
     pub claimed: bool,
+    pub total_contributions: u64,
 }
 
 impl Pool {
@@ -26,10 +27,16 @@ impl Pool {
             creator,
             deadline: (current_timestamp as u64).checked_add(duration).unwrap(),
             contributions: vec![initial_contrib],
-
+            total_contributions: initial_funding,
             winner: None,
             claimed: false,
         })
+    }
+
+    pub fn add_contribution(&mut self, contributor: Pubkey, amount: u64) -> Result<()> {
+        self.total_contributions = self.total_contributions.checked_add(amount).unwrap();
+        self.contributions.push(Contribution { contributor, amount });
+        Ok(())
     }
 
     pub fn draw_winner(&mut self) -> Result<()> {

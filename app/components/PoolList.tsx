@@ -6,6 +6,7 @@ import { getPools } from "./helpers/PoolHelper";
 import CreatePoolForm from "./CreatePoolForm";
 import Contribute from "./Contribute";
 import { Slider } from "@mui/material";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 export default function PoolList() {
   const [pools, setPools] = useState();
@@ -32,7 +33,7 @@ export default function PoolList() {
           (a, b) => a + b.amount.toNumber(),
           0
         );
-        pool.totalFunding = pool.totalFunding / 1000000000; // convert to SOL
+        pool.totalFunding = pool.totalFunding / LAMPORTS_PER_SOL;
       });
     }
   }, [pools]);

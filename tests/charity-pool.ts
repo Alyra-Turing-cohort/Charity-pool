@@ -166,11 +166,15 @@ describe("charity-pool", () => {
         console.log("Winner drawn: ", poolAccount.winner);
         console.log("Contribution recorded in pool: ", poolAccount.contributions);
 
+        console.log("Contributor : ", contributorKeypair.publicKey.toBase58());
+        console.log("Pool Winner: ", poolAccount.winner.toBase58());
+
         await program.methods.distributeFunds()
             .accounts({
                 pool: poolPda,
                 poolVault: poolVaultPda,
-                providedWinner: poolAccount.winner,
+                providedWinner: poolCreator.publicKey,
+                // providedWinner: poolAccount.winner,
                 creator: poolCreator.publicKey,
                 donation: donationKeypair.publicKey,
                 systemProgram: SystemProgram.programId,

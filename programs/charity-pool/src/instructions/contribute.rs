@@ -1,6 +1,5 @@
 use anchor_lang::prelude::*;
 use crate::state::Pool;
-use crate::state::Contribution;
 
 #[derive(Accounts)]
 pub struct Contribute<'info> {
@@ -32,12 +31,8 @@ pub fn handler(ctx: Context<Contribute>, amount: u64) -> Result<()> {
     let pool = &mut ctx.accounts.pool;
     let pool_vault = &mut ctx.accounts.pool_vault;
 
-    let contribution = Contribution {
-        contributor: contributor.key(),
-        amount,
-    };
-
-    pool.contributions.push(contribution);
+    // Add the contribution to the pool
+    pool.add_contribution(contributor.key(), amount)?;
 
     // Calculate the space taken by the contributions
     let space_needed = 8 + (8 * pool.contributions.capacity());
