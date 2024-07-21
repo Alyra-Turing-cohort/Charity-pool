@@ -32,6 +32,7 @@ export default function PoolList() {
           (a, b) => a + b.amount.toNumber(),
           0
         );
+        pool.totalFunding = pool.totalFunding / 1000000000; // convert to SOL
       });
     }
   }, [pools]);
@@ -41,14 +42,18 @@ export default function PoolList() {
       <div className="max-w-md bg-transparent  text-black dark:text-white rounded-lg shadow-lg border border-0.5 border-gray-300 dark:border-gray-800 p-[1.25rem]">
         <CreatePoolForm setPoolsLoaded={setPoolsLoaded} />
 
-        {pools && poolsLoaded &&
+        {pools &&
+          poolsLoaded &&
           pools.map((pool) => (
-            <div className="flex flex-col justify-center p-1 bg-inherit gap-1" key={pool.account.name}>
+            <div
+              className="flex flex-col justify-center p-1 bg-inherit gap-1"
+              key={pool.account.name}
+            >
               <h1 className="text-black dark:text-white">
                 {pool.account.name}
               </h1>
-
-              <Slider key={pool.account.name}
+              <Slider
+                key={pool.account.name}
                 defaultValue={pool.totalFunding}
                 step={0.5}
                 marks
@@ -57,11 +62,9 @@ export default function PoolList() {
                 disabled
               />
               {pool.totalFunding} SOL / 20
-
               <div className="flex flex-col md:flex-row justify-start  items-center py-4">
                 <Contribute pool={pool} setPoolsLoaded={setPoolsLoaded} />
               </div>
-
             </div>
           ))}
       </div>
