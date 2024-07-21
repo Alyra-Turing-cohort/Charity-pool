@@ -7,6 +7,7 @@ import CreatePoolForm from "./CreatePoolForm";
 import Contribute from "./Contribute";
 import { Slider } from "@mui/material";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import Reward from "./Reward";
 
 export default function PoolList() {
   const [pools, setPools] = useState();
@@ -52,6 +53,7 @@ export default function PoolList() {
               {pool.account.totalContributions / LAMPORTS_PER_SOL} SOL / 20
               <div className="flex flex-col md:flex-row justify-start  items-center py-4">
                 <Contribute pool={pool} setPoolsLoaded={setPoolsLoaded} />
+                <Reward pool={pool} setPoolsLoaded={setPoolsLoaded} />
               </div>
             </div>
           ))}

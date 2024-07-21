@@ -41,13 +41,13 @@ export const getPools = async (connection: anchor.web3.Connection, wallet) => {
     return poolList;
 }
 
-export const contributeToPool = async (connection: anchor.web3.Connection, 
-    wallet, 
-    pool, 
+export const contributeToPool = async (connection: anchor.web3.Connection,
+    wallet,
+    pool,
     contributionAmount: number): string => {
     // get the program
     const program = getProgramById(connection, wallet);
-    
+
     // get the pool PDA address
     const [poolPda, bump] = PublicKey.findProgramAddressSync(
         [Buffer.from("pool"),
@@ -62,19 +62,41 @@ export const contributeToPool = async (connection: anchor.web3.Connection,
         program.programId
     );
 
-    console.log('poolPda', poolPda.toBase58());
+    const tx = await program.methods
+        .contribute(new anchor.BN(contributionAmount * LAMPORTS_PER_SOL))
+        .accounts({
+            pool: poolPda,
+            creator: pool.creator,
+            contributor: wallet.publicKey,
+            donation: pool.donationPubkey,
+            poolVault: poolVaultPda,
+            systemProgram: SystemProgram.programId,
+        })
+        .rpc();
+
+    return tx;
+}
+
+export const drawWinner = async (connection: anchor.web3.Connection, wallet, pool): string => {
+    // get the program
+    const program = getProgramById(connection, wallet);
+
+    // get the pool PDA address
+    const [poolPda, bump] = PublicKey.findProgramAddressSync(
+        [Buffer.from("pool"),
+        pool.creator.toBuffer(),
+        pool.donationPubkey.toBuffer()],
+        program.programId
+    );
 
     const tx = await program.methods
-    .contribute(new anchor.BN(contributionAmount * LAMPORTS_PER_SOL))
-    .accounts({
-        pool: poolPda,
-        creator: pool.creator,
-        contributor: wallet.publicKey,
-        donation: pool.donationPubkey,
-        poolVault: poolVaultPda,
-        systemProgram: SystemProgram.programId,
-    })
-    .rpc();
+        .drawWinner()
+        .accounts({
+            pool: poolPda,
+            creator: pool.creator,
+            systemProgram: SystemProgram.programId,
+        })
+        .rpc();
 
     return tx;
 }
