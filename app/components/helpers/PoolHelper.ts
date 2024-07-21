@@ -41,7 +41,10 @@ export const getPools = async (connection: anchor.web3.Connection, wallet) => {
     return poolList;
 }
 
-export const contributeToPool = async (connection: anchor.web3.Connection, wallet, pool, contributionAmount: number) => {
+export const contributeToPool = async (connection: anchor.web3.Connection, 
+    wallet, 
+    pool, 
+    contributionAmount: number): string => {
     // get the program
     const program = getProgramById(connection, wallet);
     

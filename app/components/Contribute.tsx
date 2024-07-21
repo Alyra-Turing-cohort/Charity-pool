@@ -7,15 +7,15 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Slider from "@mui/material/Slider";
-import { Link, Wallet } from "@mui/icons-material";
+import { Wallet } from "@mui/icons-material";
 import { useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import MyMultiButton from "./layout/MyMultiButton";
 import { contributeToPool } from "./helpers/PoolHelper";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "sonner";
-import Divider from '@mui/material/Divider';
-
+import Divider from "@mui/material/Divider";
+import Link from "next/link";
 
 const style = {
   position: "absolute" as "absolute",
@@ -30,7 +30,7 @@ const style = {
   p: 4,
 };
 
-export default function TransitionsModal({pool, setPoolsLoaded}) {
+export default function TransitionsModal({ pool, setPoolsLoaded }) {
   const [sliderDefaultValue, setSliderDefaultValue] = useState(1);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -44,30 +44,30 @@ export default function TransitionsModal({pool, setPoolsLoaded}) {
   };
 
   const contribute = async () => {
-    console.log('contribute to a pool', pool.account);
-console.log('pool.donationPubkey.toBuffer()', pool.account.donationPubkey.toBuffer());
-console.log('pool.creator', pool.account.creator);
-console.log('pool.donationPubkey', pool.account.donationPubkey);
+    await contributeToPool(
+      connection.connection,
+      wallet,
+      pool.account,
+      sliderDefaultValue
+    )
+      .then((tx) => {
+        const urlSolanaEplorer =
+          "https://explorer.solana.com/tx/" + tx + "?cluster=devnet";
 
-    await contributeToPool(connection.connection, wallet, pool.account, sliderDefaultValue)
-    .then((tx) => {
-      const urlSolanaEplorer =
-        "https://explorer.solana.com/tx/" + tx + "?cluster=devnet";
+        const txMessage = (
+          <Link href={urlSolanaEplorer} target="_blank">
+            Check this out on Solana explorer <OpenInNewIcon />
+          </Link>
+        );
 
-      const txMessage = (
-        <Link href={urlSolanaEplorer} target="_blank">
-          Check this out on Solana explorer <OpenInNewIcon />
-        </Link>
-      );
-
-      setPoolsLoaded(false);
-      toast(txMessage);
-    })
-    .catch((err) => {
-      toast("Transaction cancelled");
-      console.error(err);
-    });
-  setOpen(!open);
+        setPoolsLoaded(false);
+        toast(txMessage);
+      })
+      .catch((err) => {
+        toast("Transaction cancelled");
+        console.error(err);
+      });
+    setOpen(!open);
   };
 
   return (
@@ -115,15 +115,17 @@ console.log('pool.donationPubkey', pool.account.donationPubkey);
                     max={20}
                   />
                 </Box>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  endIcon={<Wallet />}
-                  onClick={contribute}
-                >
-                  Contribute
-                </Button>
-                <span>SOL {sliderDefaultValue} </span>
+                <Box>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    endIcon={<Wallet />}
+                    onClick={contribute}
+                  >
+                    Contribute
+                  </Button>
+                  <span>SOL {sliderDefaultValue} </span>
+                </Box>
               </>
             ) : (
               <div>
