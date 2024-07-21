@@ -25,19 +25,6 @@ export default function PoolList() {
     fetchPools();
   }, [poolsLoaded]);
 
-  // calculate total funding for each pool
-  useEffect(() => {
-    if (pools && poolsLoaded) {
-      pools.map((pool) => {
-        pool.totalFunding = pool.account.contributions.reduce(
-          (a, b) => a + b.amount.toNumber(),
-          0
-        );
-        pool.totalFunding = pool.totalFunding / LAMPORTS_PER_SOL;
-      });
-    }
-  }, [pools]);
-
   return (
     <div className="w-full h-screen flex justify-center items-center ">
       <div className="max-w-md bg-transparent  text-black dark:text-white rounded-lg shadow-lg border border-0.5 border-gray-300 dark:border-gray-800 p-[1.25rem]">
@@ -55,14 +42,14 @@ export default function PoolList() {
               </h1>
               <Slider
                 key={pool.account.name}
-                defaultValue={pool.totalFunding}
+                defaultValue={pool.account.totalContributions / LAMPORTS_PER_SOL}
                 step={0.5}
                 marks
                 min={0.5}
                 max={20}
                 disabled
               />
-              {pool.totalFunding} SOL / 20
+              {pool.account.totalContributions / LAMPORTS_PER_SOL} SOL / 20
               <div className="flex flex-col md:flex-row justify-start  items-center py-4">
                 <Contribute pool={pool} setPoolsLoaded={setPoolsLoaded} />
               </div>
