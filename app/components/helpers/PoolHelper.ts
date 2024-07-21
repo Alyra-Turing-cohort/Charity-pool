@@ -22,7 +22,7 @@ export const createPool = async (title: string,
 
     const tx = await program.methods.createPool(title,
         donationKeypair.publicKey,
-        new anchor.BN(initialFunding))
+        new anchor.BN(initialFunding * LAMPORTS_PER_SOL))
         .accounts({
             pool: poolPda,
             donation: donationKeypair.publicKey,
