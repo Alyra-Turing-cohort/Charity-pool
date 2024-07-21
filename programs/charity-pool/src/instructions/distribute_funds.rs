@@ -9,13 +9,11 @@ pub struct DistributeFunds<'info> {
     #[account(
         mut,
         seeds = [b"pool".as_ref(), creator.key().as_ref(), donation.key().as_ref()],
+        constraint = !pool.claimed  @ DistributeFundsError::PoolAlreadyClaimed,
         bump
 
     )]
     pub pool: Account<'info, Pool>,
-
-    #[account(mut)]
-    pub creator: Signer<'info>,
 
     /// CHECK: This is not dangerous because the pool_vault is owned by the program
     #[account(
@@ -34,7 +32,13 @@ pub struct DistributeFunds<'info> {
     #[account(
         mut,
     )]
-    pub provided_winner: SystemAccount<'info>,
+    pub provided_winner: Signer<'info>,
+
+    #[account(
+        mut,
+        constraint = creator.key() == pool.creator @ DistributeFundsError::CreatorMismatch
+    )]
+    pub creator: SystemAccount<'info>,
 
     pub system_program: Program<'info, System>,
 }
@@ -46,7 +50,7 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
     let provided_winner = &mut ctx.accounts.provided_winner;
     let creator = &mut ctx.accounts.creator;
 
-    require_gt!(pool.contributions.len(), 0, DistributeFundsError::NoContributions);
+    require_gt!(pool.contributions.len(), 1, DistributeFundsError::NoContributions);
 
     match pool.winner {
         Some(drawn_winner) => {
@@ -67,9 +71,8 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
     assert!(pool_vault.lamports() >= winner_amount + charity_amount + protocol_amount, "Round error");
 
     // Transfer to winner
-    let bump = &[ctx.bumps.pool_vault][..];
-    let seeds = vec![b"pool_vault".as_ref(), pool.to_account_info().key.as_ref(), bump];
-    let seeds = &[&seeds[..]];
+    let bump = &[ctx.bumps.pool_vault];
+    let seeds = &[&[b"pool_vault".as_ref(), pool.to_account_info().key.as_ref(), bump][..]];
     system_program::transfer(
         CpiContext::new_with_signer(
             ctx.accounts.system_program.to_account_info(),
@@ -108,6 +111,7 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
         protocol_amount
     )?;
 
+    pool.claimed = true;
 
     msg!(
         "Funds distributed: Winner: {}, Charity: {}, Protocol: {}",

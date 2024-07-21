@@ -27,7 +27,7 @@ pub fn handler(ctx: Context<DrawWinner>) -> Result<()> {
 
     // TODO: Uncomment this line in production
     //require!(pool.is_ended(current_timestamp), DrawWinnerError::PoolNotEnded);
-    require_gt!(pool.contributions.len(), 0, DrawWinnerError::NoContributions);
+    require_gt!(pool.contributions.len(), 1, DrawWinnerError::NoContributions);
 
     pool.draw_winner()?;
 

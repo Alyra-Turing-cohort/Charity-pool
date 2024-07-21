@@ -11,7 +11,7 @@ charity_pool = "Hnnm5AJZQR8j6r6PcPSg3sZZHbLNS2Ta7qnc8zwZAbeR"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

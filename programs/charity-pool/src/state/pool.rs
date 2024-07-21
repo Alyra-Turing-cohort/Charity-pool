@@ -11,11 +11,10 @@ pub struct Pool {
     #[max_len(64)]
     pub contributions: Vec<Contribution>,
     pub winner: Option<Pubkey>,
+    pub claimed: bool,
 }
 
 impl Pool {
-    pub const INIT_SPACE: usize = 8 + 4 + (32 * 2) + 8 + (8 + 64 * (32 + 8)); // adjust the space calculation if necessary
-
     pub fn new(name: String, donation_pubkey: Pubkey, creator: Pubkey, initial_funding: u64) -> Result<Self> {
         let current_timestamp = Clock::get()?.unix_timestamp;
         let duration = 5 * 60;
@@ -26,15 +25,16 @@ impl Pool {
             donation_pubkey,
             creator,
             deadline: (current_timestamp as u64).checked_add(duration).unwrap(),
-            contributions: vec![initial_contrib; 1],
+            contributions: vec![initial_contrib],
 
             winner: None,
+            claimed: false,
         })
     }
 
     pub fn draw_winner(&mut self) -> Result<()> {
         // self.winner = simulate_vrf(pool.contributions.len());
-        self.winner = Some(self.contributions[0].contributor);
+        self.winner = Some(self.contributions[1].contributor);
         Ok(())
     }
 

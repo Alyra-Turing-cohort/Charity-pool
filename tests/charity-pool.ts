@@ -156,12 +156,14 @@ describe("charity-pool", () => {
 
         assert.isNotNull(poolAccount.winner, "Winner should be drawn");
         assert.ok(contributions.length > 0, "Contributions should be recorded");
+        assert.isTrue(poolAccount.claimed === false, "Pool should not be claimed");
 
         const contribution = contributions.find(
             (c: any) => c.contributor.toBase58() === contributorKeypair.publicKey.toBase58()
         );
         assert.ok(contribution, "Contribution should exist");
 
+        console.log("Winner drawn: ", poolAccount.winner);
         console.log("Contribution recorded in pool: ", poolAccount.contributions);
 
         await program.methods.distributeFunds()
@@ -173,7 +175,7 @@ describe("charity-pool", () => {
                 donation: donationKeypair.publicKey,
                 systemProgram: SystemProgram.programId,
             })
-            .signers([poolCreator])
+            .signers([contributorKeypair])
             .rpc();
 
         console.log("Funds distributed, fetching pool account...");
@@ -183,6 +185,8 @@ describe("charity-pool", () => {
         const updatedContributions = updatedPoolAccount.contributions;
 
         console.log("Updated pool contributions: ", updatedContributions);
+
+        assert.isTrue(updatedPoolAccount.claimed === true, "Pool should be claimed");
 
         const creatorBalance = await provider.connection.getBalance(poolCreator.publicKey);
         const donationBalance = await provider.connection.getBalance(donationKeypair.publicKey);
