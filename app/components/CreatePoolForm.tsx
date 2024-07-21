@@ -78,7 +78,6 @@ export default function CreatePoolForm({ setPoolsLoaded }) {
 
   const handleTitleChange = (event: SelectChangeEvent) => {
     setTitle(event.target.value as string);
-    console.log(title);
   };
 
   const valueLabelFormat = (value: number): string => {

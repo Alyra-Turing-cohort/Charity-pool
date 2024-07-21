@@ -109,14 +109,17 @@ export const getRewardedPools = async (connection: anchor.web3.Connection, walle
     // filter the pools that have the winner is not null
     const poolsHavingAWinner = poolList.filter(pool => pool.account.winner !== null);
 
-    // filter the pools that have the winner is the same as wallet.publicKey
-    const rewardedPools = poolsHavingAWinner.filter(pool => pool.account.winner.toBase58() === wallet.publicKey.toBase58());
-  
-    return rewardedPools;
+    if (poolsHavingAWinner) {
+        // filter the pools that have the winner is the same as wallet.publicKey
+        const rewardedPools = poolsHavingAWinner.filter(pool => pool.account.winner.toBase58() === wallet.publicKey.toBase58());
+
+        return rewardedPools;
+    }
+    return [];
 }
 
-export const distributeFunds = async (connection: anchor.web3.Connection, 
-    wallet, 
+export const distributeFunds = async (connection: anchor.web3.Connection,
+    wallet,
     pool): string => {
     // get the program
     const program = getProgramById(connection, wallet);
@@ -136,16 +139,16 @@ export const distributeFunds = async (connection: anchor.web3.Connection,
     );
 
     const tx = await program.methods
-    .distributeFunds()
-    .accounts({
-        pool: poolPda,
-        poolVault: poolVaultPda,
-        providedWinner: pool.winner,
-        creator: pool.creator,
-        donation: pool.donationPubkey,
-        systemProgram: SystemProgram.programId,
-    })
-    .rpc();
+        .distributeFunds()
+        .accounts({
+            pool: poolPda,
+            poolVault: poolVaultPda,
+            providedWinner: pool.winner,
+            creator: pool.creator,
+            donation: pool.donationPubkey,
+            systemProgram: SystemProgram.programId,
+        })
+        .rpc();
 
     return tx;
 }
