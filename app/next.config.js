@@ -4,6 +4,7 @@ const nextConfig = {
   semi: false,
   output: "export",
   singleQuote: true,
+  basePath: "/Charity-pool",
   trailingComma: "all",
   typescript: {
     ignoreBuildErrors: true,
