@@ -1,0 +1,12 @@
+name: build-test
+on: [push]
+jobs:
+  run-anchor-build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: metadaoproject/setup-anchor@v2
+      - run: anchor build
+        shell: bash
+      - run: anchor test
+        shell: bash
