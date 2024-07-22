@@ -9,7 +9,7 @@ After the deadline, the pool will be closed and the funds will be distributed to
 
 ## Dev team
 
-- Alain WACKENHEIM [Github]() - [LinkedIn]()
+- Alain WACKENHEIM [Github](https://github.com/al0x0508) - [LinkedIn](https://www.linkedin.com/in/alain-wackenheim-6ab145123/)
 - Andrinandrasana David Rasamoelina [Github](https://github.com/andrijdavid/) - [LinkedIn](https://www.linkedin.com/in/andrijdavid/)
 - Yassine YADINE [Gitlab](https://gitlab.com/yassine-yadine) - [LinkedIn](https://www.linkedin.com/in/yassine-yadine-6b841784/)
 
