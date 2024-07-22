@@ -25,7 +25,7 @@ export default function ClaimReward({ pool }) {
 
         const txMessage = (
           <Link href={urlSolanaEplorer} target="_blank">
-            Check who's the lucky dude on Solana explorer <OpenInNewIcon />
+            Check who is the lucky dude on Solana explorer <OpenInNewIcon />
           </Link>
         );
 
@@ -35,7 +35,7 @@ export default function ClaimReward({ pool }) {
         toast("Transaction cancelled");
         console.error(err);
       });
-    
+
   };
 
   return (

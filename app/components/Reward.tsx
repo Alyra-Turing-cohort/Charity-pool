@@ -47,7 +47,7 @@ export default function Reward({ pool, setPoolsLoaded }) {
 
         const txMessage = (
           <Link href={urlSolanaEplorer} target="_blank">
-            Check who's the lucky dude on Solana explorer <OpenInNewIcon />
+            Check who is the lucky dude on Solana explorer <OpenInNewIcon />
           </Link>
         );
 
@@ -89,7 +89,7 @@ export default function Reward({ pool, setPoolsLoaded }) {
                   id="transition-modal-description"
                   sx={{ mt: 2, mb: 2 }}
                 >
-                  Let's draw a pool's winner.
+                  Lets draw a pool winner.
                   <Divider variant="middle" />
                   {pool.account.name}
                 </Typography>

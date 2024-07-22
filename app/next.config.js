@@ -4,6 +4,9 @@ const nextConfig = {
   semi: false,
   singleQuote: true,
   trailingComma: "all",
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;

@@ -26,7 +26,7 @@ export default function RewardList() {
       };
       fetchPools();
     }
-  }, []);
+  }, [connection, wallet]);
 
   return (
     <div>
