@@ -9,9 +9,10 @@ After the deadline, the pool will be closed and the funds will be distributed to
 
 ## Dev team
 
-- Alain WACKENHEIM [link to his Github]() - [link to LinkedIn]()
-- Andrinandrasana David Rasamoelina [link to his Github]() - [link to LinkedIn]()
-- Yassine YADINE [link to his Gitlab](https://gitlab.com/yassine-yadine) - [link to LinkedIn](https://www.linkedin.com/in/yassine-yadine-6b841784/)
+- Alain WACKENHEIM [Github]() - [LinkedIn]()
+- Andrinandrasana David Rasamoelina [Github](https://github.com/andrijdavid/) - [LinkedIn](https://www.linkedin.com/in/andrijdavid/)
+- Yassine YADINE [Gitlab](https://gitlab.com/yassine-yadine) - [LinkedIn](https://www.linkedin.com/in/yassine-yadine-6b841784/)
+
 
 ## The program on Solana's explorer
 
