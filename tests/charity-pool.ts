@@ -304,7 +304,25 @@ describe("charity-pool", () => {
      * Distribution test
      *
      * */
-
+// it("Verify Pool Vault Balance", async () => {
+    //     const preDistributionBalance = await provider.connection.getBalance(poolVaultPda);
+    //     assert.ok(preDistributionBalance > 0, "Pool vault should have a positive balance before distribution");
+    //
+    //     await program.methods.distributeFunds()
+    //         .accounts({
+    //             pool: poolPda,
+    //             poolVault: poolVaultPda,
+    //             providedWinner: contributorKeypair.publicKey,
+    //             creator: poolCreator.publicKey,
+    //             donation: donationKeypair.publicKey,
+    //             systemProgram: SystemProgram.programId,
+    //         })
+    //         .signers([contributorKeypair])
+    //         .rpc();
+    //
+    //     const postDistributionBalance = await provider.connection.getBalance(poolVaultPda);
+    //     assert.equal(postDistributionBalance, 0, "Pool vault balance should be zero after distribution");
+    // });
     it("Distributes funds", async () => {
         // Draw winner
         await program.methods.drawWinner()
