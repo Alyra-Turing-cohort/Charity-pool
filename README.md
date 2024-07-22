@@ -15,11 +15,11 @@ After the deadline, the pool will be closed and the funds will be distributed to
 
 ## Charity pool is live
 
-DApp is live and you can connect at [https://alyra-turing-cohort.github.io/Charity-pool/](https://alyra-turing-cohort.github.io/Charity-pool/)
+DApp is live and you can connect at [https://alyra-turing-cohort.github.io/Charity-pool/](https://explorer.solana.com/address/8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs?cluster=devnet)
 
 ## The program on Solana's explorer
 
-The Charity pool's smart contract ID and it's deployed on devnet Solana's cluster at: [8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs](https://explorer.solana.com/address/8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs)
+The Charity pool's smart contract ID and it's deployed on devnet Solana's cluster at: [8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs](https://explorer.solana.com/address/8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs?cluster=devnet)
 
 ## Features
 
