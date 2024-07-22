@@ -1,13 +1,13 @@
 import * as anchor from "@coral-xyz/anchor";
-import {Program} from "@coral-xyz/anchor";
-import {CharityPool} from "../target/types/charity_pool";
+import { Program } from "@coral-xyz/anchor";
+import { CharityPool } from "../target/types/charity_pool";
 import {
     LAMPORTS_PER_SOL,
     PublicKey,
     SystemProgram,
     Keypair
 } from "@solana/web3.js";
-import {assert} from "chai";
+import { assert } from "chai";
 
 describe("charity-pool", () => {
     // Configure the client to use the local cluster.
@@ -409,7 +409,7 @@ describe("charity-pool", () => {
                 donation: donationKeypair.publicKey,
                 systemProgram: SystemProgram.programId,
             })
-            .signers([poolAccount.winner])
+            .signers([contributorKeypair])
             .rpc();
 
         const updatedPoolAccount = await program.account.pool.fetch(poolPda);
@@ -426,7 +426,7 @@ describe("charity-pool", () => {
                     donation: donationKeypair.publicKey,
                     systemProgram: SystemProgram.programId,
                 })
-                .signers([poolAccount.winner])
+                .signers([contributorKeypair])
                 .rpc();
         } catch (error) {
             assert.ok(error, "Should throw an error if trying to distribute funds for already claimed pool");
