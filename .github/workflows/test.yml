@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - uses: metadaoproject/setup-anchor@v2
+      - uses: mrgnlabs/anchor-test-action@v0.4
         with:
           anchor-version: '0.30.1'
           solana-cli-version: '1.18.18'
