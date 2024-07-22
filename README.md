@@ -2,7 +2,10 @@
 
 ## Description
 
-The Charity pool is a decentralized application that allows users to donate to a pool of funds that can be used for various causes. The pool is managed by a smart contract that ensures that all donations are transparent, secure and uncensored.
+The Charity pool is a Solana decentralized application that allows users to create and donate to a pool of funds that can be used for various causes. The pool is managed by a smart contract that ensures that all donations are transparent, secure and uncensored.
+
+The pool after being created, a smart contract will affect to it a deadline. 
+After the deadline, the pool will be closed and the funds will be distributed to the beneficiaries in the pool. 
 
 ## Dev team
 
@@ -36,3 +39,30 @@ The Charity pool smart contract is deployed on Solana's explorer at the followin
 - Solana/wallet-adapter-react version: 0.15.32,
 - Solana/wallet-adapter-react-ui version: 0.9.31,
 - Builders scaffolder: [Github project]()
+
+## Installation
+
+To install the Charity pool, follow these steps:
+
+1. Clone the current repository
+2. Install the dependencies using npm or yarn
+```bash
+cd app
+npm install
+```
+or
+```bash
+cd app
+yarn 
+```
+3. Run the web app locally
+```bash
+npm run dev
+```
+or
+```bash
+yarn dev
+```
+4. Open the web app in your browser at http://localhost:3000
+5. Connect to the Charity pool dApp
+6. Enjoy...
