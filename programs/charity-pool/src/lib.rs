@@ -15,10 +15,6 @@ declare_id!("8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs");
 pub mod charity_pool {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        initialize::handler(ctx)
-    }
-
     pub fn create_pool(ctx: Context<CreatePool>, pool_name: String, donation_pubkey: Pubkey, initial_funding: u64) -> Result<()> {
         create_pool::handler(ctx, pool_name, donation_pubkey, initial_funding)
     }

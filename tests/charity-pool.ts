@@ -68,12 +68,6 @@ describe("charity-pool", () => {
 
     });
 
-    it("Is initialized!", async () => {
-        // Add your test here.
-        const tx = await program.methods.initialize().rpc();
-        console.log("Your transaction signature", tx);
-    });
-
     /**
      * Pool creation test
      * */
@@ -304,7 +298,7 @@ describe("charity-pool", () => {
      * Distribution test
      *
      * */
-// it("Verify Pool Vault Balance", async () => {
+    // it("Verify Pool Vault Balance", async () => {
     //     const preDistributionBalance = await provider.connection.getBalance(poolVaultPda);
     //     assert.ok(preDistributionBalance > 0, "Pool vault should have a positive balance before distribution");
     //
