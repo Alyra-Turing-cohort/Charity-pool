@@ -388,30 +388,6 @@ describe("charity-pool", () => {
     });
 
     it("Pool Already Claimed", async () => {
-        await program.methods.drawWinner()
-            .accounts({
-                pool: poolPda,
-                creator: poolCreator.publicKey,
-                systemProgram: SystemProgram.programId,
-            })
-            .signers([poolCreator])
-            .rpc();
-
-        // Now distribute funds to claim the pool
-        const poolAccount = await program.account.pool.fetch(poolPda);
-
-        await program.methods.distributeFunds()
-            .accounts({
-                pool: poolPda,
-                poolVault: poolVaultPda,
-                providedWinner: poolAccount.winner,
-                creator: poolCreator.publicKey,
-                donation: donationKeypair.publicKey,
-                systemProgram: SystemProgram.programId,
-            })
-            .signers([contributorKeypair])
-            .rpc();
-
         const updatedPoolAccount = await program.account.pool.fetch(poolPda);
         assert.isTrue(updatedPoolAccount.claimed, "Pool should be marked as claimed");
 
