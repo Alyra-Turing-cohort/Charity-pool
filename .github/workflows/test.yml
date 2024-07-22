@@ -11,18 +11,6 @@ jobs:
           anchor-version: '0.30.1'
           solana-cli-version: '1.18.18'
           node-version: '22.2.0'
-      - name: List rustup toolchains
-        run: rustup toolchain list
-      - name: Set default toolchain
-        run: rustup default stable
-      - name: List rustup toolchains
-        run: rustup toolchain list
-      - name: Generate new keygen
-        run: solana-keygen new
-      - name: Set solana target cluster to local
-        run: solana config set --url http:localhost:8899
-      - name: Check solana config
-        run: solana config get
       - name: Install yarn dependencies
         run: yarn install
       - name: Build
