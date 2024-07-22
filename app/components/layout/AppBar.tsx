@@ -37,13 +37,13 @@ export default function PrimarySearchAppBar() {
                 href="/"
                 className="text-[#000000] dark:text-white text-[18px] font-bold navLink"
               >
-                Home
+                Pools
               </Link>
               <Link
-                href="/basic"
+                href="/claim"
                 className="text-[#000000] dark:text-white text-[18px] font-bold navLink"
               >
-                Basic
+                Claims
               </Link>
             </div>
           </Box>

@@ -8,5 +8,6 @@ module.exports = async function (provider) {
   // Configure client to use the provider.
   anchor.setProvider(provider);
 
+  const program = anchor.workspace.CharityPool;
   // Add your deploy script here.
 };

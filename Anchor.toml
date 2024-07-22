@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-charity_pool = "Hnnm5AJZQR8j6r6PcPSg3sZZHbLNS2Ta7qnc8zwZAbeR"
+charity_pool = "8Wc1xYfxnGmqs7u7bR4xNa1uvBV8eNpVHN4NWU4xebFs"
 
 [registry]
 url = "https://api.apr.dev"
