@@ -173,7 +173,7 @@ describe("charity-pool", () => {
             .accounts({
                 pool: poolPda,
                 poolVault: poolVaultPda,
-                providedWinner: poolCreator.publicKey,
+                providedWinner: contributorKeypair.publicKey,
                 // providedWinner: poolAccount.winner,
                 creator: poolCreator.publicKey,
                 donation: donationKeypair.publicKey,
