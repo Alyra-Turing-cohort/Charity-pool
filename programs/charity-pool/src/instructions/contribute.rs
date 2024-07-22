@@ -34,14 +34,6 @@ pub fn handler(ctx: Context<Contribute>, amount: u64) -> Result<()> {
     // Add the contribution to the pool
     pool.add_contribution(contributor.key(), amount)?;
 
-    // Calculate the space taken by the contributions
-    let space_needed = 8 + (8 * pool.contributions.capacity());
-
-    // Check the account size and reallocate if necessary
-    if pool.to_account_info().data_len() < space_needed {
-        pool.to_account_info().realloc(space_needed, false)?;
-    }
-
     // Transfer contribution amount from the contributor to the pool's account
     let ix = anchor_lang::solana_program::system_instruction::transfer(
         &contributor.key(),
