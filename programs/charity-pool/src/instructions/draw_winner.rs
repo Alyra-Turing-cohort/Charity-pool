@@ -22,7 +22,6 @@ pub struct DrawWinner<'info> {
 pub fn handler(ctx: Context<DrawWinner>) -> Result<()> {
     let pool = &mut ctx.accounts.pool;
 
-
     // TODO: Uncomment this line in production
     //let current_timestamp = Clock::get()?.unix_timestamp as u64;
     //require!(pool.is_ended(current_timestamp), DrawWinnerError::PoolNotEnded);

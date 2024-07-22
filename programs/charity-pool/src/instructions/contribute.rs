@@ -9,7 +9,6 @@ pub struct Contribute<'info> {
     )]
     pub pool: Account<'info, Pool>,
 
-    /// CHECK: This is not dangerous because the pool_vault is owned by the program
     #[account(
         mut,
         seeds = [b"pool_vault".as_ref(), pool.key().as_ref()],

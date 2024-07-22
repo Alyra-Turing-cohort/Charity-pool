@@ -70,6 +70,8 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
 
     assert!(pool_vault.lamports() >= winner_amount + charity_amount + protocol_amount, "Round error");
 
+    pool.claimed = true;
+
     // Transfer to winner
     let bump = &[ctx.bumps.pool_vault];
     let seeds = &[&[b"pool_vault".as_ref(), pool.to_account_info().key.as_ref(), bump][..]];
@@ -110,8 +112,6 @@ pub fn handler(ctx: Context<DistributeFunds>) -> Result<()> {
         ),
         protocol_amount
     )?;
-
-    pool.claimed = true;
 
     msg!(
         "Funds distributed: Winner: {}, Charity: {}, Protocol: {}",
